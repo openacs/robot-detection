@@ -1,8 +1,7 @@
 <master>
 <property name="title">Robot Detection Administration</property>
-<h2>Robot Detection Administration</h2>
-@context_bar@
-<hr>
+<property name="context"></property>
+
 Documentation:  <a href="/doc/robot-detection">/doc/robot-detection</a>
 
 <h3>Configuration Settings</h3>

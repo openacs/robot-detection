@@ -8,13 +8,13 @@ ad_page_contract {
     @creation-date 2000-12-13
     @cvs-id $Id$
 } -properties {
-    context_bar:onevalue
+    context:onevalue
     web_robots_db:onevalue
     filter_patterns:multirow
     redirect_url:onevalue
     robots:multirow
 }
-set context_bar [ad_context_bar]
+set context {}
 set web_robots_db [ad_parameter WebRobotsDB]
 
 set filter_patterns_list [join [ad_parameter FilterPattern] "\n"]
@@ -30,5 +30,3 @@ set filter_patterns:rowcount $filter_count
 
 set redirect_url [ad_parameter RedirectURL]
 db_multirow robots robots_query "select robot_name, robot_details_url from robots order by robot_name"
-
-ad_return_template
