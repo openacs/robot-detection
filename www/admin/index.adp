@@ -20,7 +20,7 @@ FilterPattern=@filter_patterns.item@
 
 <p>
 
-Courtesy of the <a href="http://info.webcrawler.com/mak/projects/robots/active.html">Web Robots Database</a>,
+Courtesy of the <a href="http://www.robotstxt.org/wc/active.html">Web Robots Database</a>,
 this installation of the ACS can recognize the following robots:
 
 <ul>
