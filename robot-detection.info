@@ -17,7 +17,7 @@
         <vendor url="http://www.arsdigita.com/">ArsDigita Corporation</vendor>
         <description format="text/html">With this package, you can automatically redirect web robots from search engines away from areas that require login and into a separate area which should have content suitable for indexing.</description>
 
-        <requires url="acs-kernel" version="4.0"/>
+        <requires url="acs-kernel" version="4.6.2"/>
 
         <files>
             <file type="package_spec" path="robot-detection.info"/>
