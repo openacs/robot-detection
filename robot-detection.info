@@ -12,10 +12,12 @@
         <database>postgresql</database>
     </database-support>
         <owner url="mailto:rogerh@arsdigita.com">Roger Hsueh</owner>
-        <summary>Redirects web robots to a specified URL</summary>
+        <summary>Redirect web robots to specified URLs</summary>
         <release-date>2001-01-26</release-date>
         <vendor url="http://www.arsdigita.com/">ArsDigita Corporation</vendor>
-        <description format="text/html">With this package, you can automatically redirect web robots from search engines away from areas that require login and into a separate area which should have content suitable for indexing.</description>
+        <description format="text/html">With this package, you can automatically redirect web robots from search engines away from areas that require login and into a separate area which provides content suitable for indexing.  You should be aware that this is sometimes considered to be 
+&lt;a href="http://www.google.com/webmasters/faq.html#cloaking"&gt;cloaking&lt;/a&gt; so excercise care here.
+</description>
 
         <requires url="acs-kernel" version="4.6.2"/>
 
