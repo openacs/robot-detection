@@ -22,7 +22,7 @@ if { [db_0or1row robot_detection_id ""] } {
 
     # Install ad_robot_filter for all specified patterns
     foreach filter_pattern $filter_pattern_list {
-        ns_log Notice "Installing robot filter for $filter_pattern\n"
+        ns_log Debug "Installing robot filter for $filter_pattern"
         set filter_pattern [ad_urlencode [string trim $filter_pattern]]
         ad_register_filter postauth GET $filter_pattern ad_robot_filter
     }

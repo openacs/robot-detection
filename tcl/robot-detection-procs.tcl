@@ -19,7 +19,7 @@ of rows replicated. May raise a Tcl error that should be caught by the caller.
 } {
     set web_robots_db_url [ad_parameter WebRobotsDB robot-detection "http://info.webcrawler.com/mak/projects/robots/active/all.txt"]
     if {[catch {set robot_db_text_file [util_httpget $web_robots_db_url]} errmsg]} {
-	ns_log Error "ad_replicate_web_robots_db couldn't get the robots file from the web\n"
+	ns_log Warning "ad_replicate_web_robots_db couldn't get the robots file from the web"
 	global errorInfo
 	error $errmsg $errorInfo
     }
@@ -75,7 +75,7 @@ of rows replicated. May raise a Tcl error that should be caught by the caller.
             }
 	}
     } on_error { 
-	ns_log Error  "ad_replicate_web_robots_db had problem with database operations\n"
+	ns_log Error  "ad_replicate_web_robots_db had problem with database operations:\n$errmsg"
 	return -code error $errmsg
     }
     return [db_string num_of_robots "select count(*) from robots"]
@@ -112,7 +112,7 @@ ad_proc ad_robot_filter {conn args why} {A filter to redirect any recognized rob
 	# redirects to itself.)
 	if { [exists_and_not_null robot_redirect_url] && [string first $robot_redirect_url [ad_conn url]] != 0 } {
 	    # requested URL does not start with robot redirect URL (usually a dir)
-	    ns_log Notice "Robot being bounced by ad_robot_filter: User-Agent = $useragent"
+	    ns_log Debug "Robot being bounced by ad_robot_filter: User-Agent = $useragent"
 	    ad_returnredirect $robot_redirect_url
 	    return "filter_return"
 	} else {
@@ -130,17 +130,17 @@ specified by the RefreshIntervalDays configuration parameter
     db_transaction {
 	set robot_count [db_string robot_count {select count(*) from robots} ]
 	if {$robot_count == 0} {
-	    ns_log Notice "Replicating Web Robots DB, because robots table is empty"
+	    ns_log Debug "Replicating Web Robots DB, because robots table is empty"
 	    ad_replicate_web_robots_db
 	} else {
 	    set refresh_interval [ad_parameter RefreshIntervalDays robot-detection 30]
 	    set days_old [db_string days_since_last_update {
 		select trunc(sysdate - max(nvl(modified_date, insertion_date))) from robots} ]
 		if {$days_old >= $refresh_interval} {
-		    ns_log Notice "Replicating Web Robots DB, because data in robots table has expired"
+		    ns_log Debug "Replicating Web Robots DB, because data in robots table has expired"
 		    ad_replicate_web_robots_db 
 		} else {
-		    ns_log Notice "Not replicating Web Robots DB at this time, because data in the robots table has not expired"
+		    ns_log Debug "Not replicating Web Robots DB at this time, because data in the robots table has not expired"
 		}
 	    }
 	} on_error {
