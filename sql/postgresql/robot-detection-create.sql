@@ -28,5 +28,6 @@ create table robots (
 	-- insertion_date records when this row was actually inserted
 	-- used to determine if we need to re-populate the table from
 	-- the text file at Web Robots DB.
-	insertion_date                  date default now() not null
+	insertion_date                  date default now() not null,
+	modified_date                   date
 );
