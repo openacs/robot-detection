@@ -7,7 +7,7 @@ ad_page_contract {
     @author Michael Yoon  (michael@yoon.org)
     @author Roger Hsueh (rogerh@arsdigita.com)
     @creation-date 2000-12-07
-    @cvs-id: $Id$
+    @cvs-id $Id$
 }
 
 if [catch {ad_replicate_web_robots_db} errmsg] {
