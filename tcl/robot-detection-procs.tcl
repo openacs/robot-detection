@@ -1,4 +1,4 @@
-
+ad_library {
     packages/robot-detection/tcl/robot-detection-procs.tcl
 
     @author Michael Yoon (michael@yoon.org) 
