@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>ACS Administrator's guide</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="aD Hack of: Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Robot detection"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Robot detection"
+HREF="index.html"><LINK
+REL="NEXT"
+TITLE="Developer's guide"
+HREF="dev-guide.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="ad-doc.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Robot detection</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="dev-guide.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+SIZE="1"
+NOSHADE="NOSHADE"
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="acs-admin-guide"
+>Chapter 1. ACS Administrator's guide</A
+></H1
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="install"
+>1.1. Web Robot Detection Installation</A
+></H1
+><UL
+><LI
+><P
+CLASS="listitem"
+>install the robot-detection package using Arsdigita Package
+	Manager (APM)</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>mount the robot-detection package under site-mapper under the
+	root</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>set parameters for the package instance using site-mapper</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>set access permission for the pages under robot-detection using
+	site-mapper; Disinherit permission from the root, thus making
+	ACS-admin only person able to access it</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>build a non-password protected site starting at /robot-heaven/
+	(that's the default destination). If necessary to write a script to
+	create a pseudo static HTML file appearance</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>restart AOLserver</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>visit the /robot-detection/admin to see whether your configs
+	took effect</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>view your server error log to make sure that the filters are
+	getting registered</P
+></LI
+></UL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+SIZE="1"
+NOSHADE="NOSHADE"
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="index.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="dev-guide.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Robot detection</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Developer's guide</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,38 @@
+<sect1 id="install" xreflabel="Web Robot Detection Installation Guide">
+  <title>Web Robot Detection Installation Guide</title>
+
+  <itemizedlist>
+    <listitem><para>Install the robot-detection package using Arsdigita Package
+	Manager (APM)</para></listitem>
+
+    <listitem><para>Mount the robot-detection package under site-mapper under the
+	root</para></listitem>
+
+    <listitem><para>Set parameters for the package instance using site-mapper</para></listitem>
+
+    <listitem><para>Set access permission for the pages under robot-detection using
+	site-mapper; Disinherit permission from the root, thus making
+	ACS-admin only person able to access it</para></listitem>
+
+    <listitem><para>Build a non-password protected site starting at /robot-heaven/
+	(that's the default destination). If necessary to write a script to
+	create a pseudo static HTML file appearance</para></listitem>
+
+    <listitem><para>Restart AOLserver</para></listitem>
+
+    <listitem><para>Visit the /robot-detection/admin to see whether your 
+        configs took effect</para></listitem>
+
+    <listitem><para>Review your server error log to make sure that the filters
+        are getting registered</para></listitem>
+  </itemizedlist>
+
+</sect1>
+
+
+
+<!--
+ Local Variables:
+ sgml-parent-document: ("index.xml" "chapter" "sect1")
+ End:
+-->

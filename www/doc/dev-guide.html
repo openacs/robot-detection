@@ -1,0 +1,589 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Developer's guide</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="aD Hack of: Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Robot detection"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="ACS Administrator's guide"
+HREF="acs-admin-guide.html"><LINK
+REL="NEXT"
+TITLE="Web Robot Detection Design Documentation"
+HREF="design.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="ad-doc.css"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Robot detection</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="acs-admin-guide.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="design.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+SIZE="1"
+NOSHADE="NOSHADE"
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="dev-guide"
+>Chapter 2. Developer's guide</A
+></H1
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="requirements"
+>2.1. Web Robot Detection Requirements</A
+></H1
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+>2.1.1. <A
+HREF="dev-guide.html#requirements-introduction"
+>Introduction</A
+></DT
+><DT
+>2.1.2. <A
+HREF="dev-guide.html#requirements-vision-statement"
+>Vision Statement</A
+></DT
+><DT
+>2.1.3. <A
+HREF="dev-guide.html#requirements-web-robot-detection-overview"
+>Web Robot Detection Overview</A
+></DT
+><DT
+>2.1.4. <A
+HREF="dev-guide.html#requirements-use-cases-and-user-scenarios"
+>Use-cases and User-scenarios</A
+></DT
+><DT
+>2.1.5. <A
+HREF="dev-guide.html#requirements-related-links"
+>Related Links</A
+></DT
+><DT
+>2.1.6. <A
+HREF="dev-guide.html#requirements-requirements-data-model"
+>Requirements: Data Model</A
+></DT
+><DT
+>2.1.7. <A
+HREF="dev-guide.html#requirements-requirements-api"
+>Requirements: API</A
+></DT
+><DT
+>2.1.8. <A
+HREF="dev-guide.html#requirements-requirements-site-administrator-interface"
+>Requirements: Site Administrator Interface</A
+></DT
+><DT
+>2.1.9. <A
+HREF="dev-guide.html#requirements-revision-history"
+>Revision History</A
+></DT
+></DL
+></DIV
+><DIV
+CLASS="authorblurb"
+><A
+NAME="AEN42"
+></A
+><P
+>&#13;      By <A
+HREF="mailto:rogerh@arsdigita.com"
+TARGET="_top"
+>Roger Hsueh</A
+>
+    </P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="requirements-introduction"
+>2.1.1. Introduction</A
+></H2
+><P
+>Search engines use web robots to periodically retrieve pages
+      from sites for indexing. However, robots won't be able to access
+      areas that requre users to log in, yet those areas probably have
+      content in the database that should be open to searches from the
+      public. The site administrator can set up a dedicated area on the
+      site to serve content to robots, now it's up to robot-detection to
+      make robots go to the right place.</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="requirements-vision-statement"
+>2.1.2. Vision Statement</A
+></H2
+><P
+>Without search engines, people would be lost on the Internet.
+      However, personalized systems like ACS have much of their content
+      hidden behind login pages -- which would be inaccessible for the
+      software robot crawlers from search engines. To increase a site's
+      visibility, site owners need a tool to identify visiting robots and
+      present them with content to be indexed.  The Web Robot Detection
+      package fulfills the role of such a tool.</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="requirements-web-robot-detection-overview"
+>2.1.3. Web Robot Detection Overview</A
+></H2
+><P
+>Web Robot Detection is an application package that defines a
+      data model and some code to handle traffic from search-engine
+      robots. It has the following components:</P
+><UL
+><LI
+><P
+CLASS="listitem"
+>A data model for storing information about known search-engine
+	  robots on the web.</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>A mechanism to maintain the list of robots and keep that in
+	  sync with the database.</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>A mechanism based on the ACS Kernel to specify the paths from
+	  which to redirect robots and the target to direct the robots
+	  to.</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>Code definition to make use of the request processor filter
+	  provided by ACS Kernel 4.0.</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="requirements-use-cases-and-user-scenarios"
+>2.1.4. Use-cases and User-scenarios</A
+></H2
+><P
+>The Web Robot Detection package is not meant to be used by
+      regular users. Instead, the site-wide administrator is responsible
+      for mapping directories not accessible to search engines to a
+      "robot heaven", which has been setup to provide content suitable to be
+      indexed.</P
+><P
+>The site-wide administrator would typically download the 
+      robot-detection package, install it using the APM (Arsdigita Package 
+      Manager) and set up the parameters, check out the administration page 
+      to see the current parameters and the list of identifiable robots, 
+      build the "robot heaven" and verify the whole thing works.  
+      Afterward, this package requires no additional maintenance. </P
+><P
+>A software robot making a http request to a part of the site that
+      requires login would be automatically redirected to the "robot heaven".
+    </P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="requirements-related-links"
+>2.1.5. Related Links</A
+></H2
+><UL
+><LI
+><P
+CLASS="listitem"
+><A
+HREF="acs-admin-guide.html#install"
+>Web Robot Detection Installation</A
+></P
+></LI
+><LI
+><P
+CLASS="listitem"
+><A
+HREF="design.html"
+>Web Robot Detection Design Documentation</A
+></P
+></LI
+><LI
+><P
+CLASS="listitem"
+><A
+HREF="http://www.arsdigita.com/qas/"
+TARGET="_top"
+>Test Cases</A
+></P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="requirements-requirements-data-model"
+>2.1.6. Requirements: Data Model</A
+></H2
+><UL
+><LI
+><P
+CLASS="listitem"
+>10.10.0 Store information about robots</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>10.10.5 A primary key to identify each individual 
+          robot</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>10.10.7 Some fields for the UI: name of robot and
+          url to get more information about the robot</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>10.10.10 Useragent header is necessary to find out which
+	  connection is coming from a robot</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>10.10.15 Insertion date to keep track when was the robots table last refreshed</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="requirements-requirements-api"
+>2.1.7. Requirements: API</A
+></H2
+><UL
+><LI
+><P
+CLASS="listitem"
+>20.10.10 Check on server restart when was the robot information last refreshed, if it's been longer than a value specified in the package's parameter, run the procedure (20.20.0) to refresh the robot information in the database</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>20.10.15 On server restart, if the robot information is not present in the database, run the refresh procedure (20.20.0) to obtain it</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>20.20.0 A way to automatically gather information about web robots from a website that keeps such data</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>20.30.0 A way to detect robots based on the useragent field of the robot's http header</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>20.40.0 A way to redirect an identified robot to another path on the same site</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="requirements-requirements-site-administrator-interface"
+>2.1.8. Requirements: Site Administrator Interface</A
+></H2
+><UL
+><LI
+><P
+CLASS="listitem"
+>30.10.0 Display current parameters</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>30.20.0 Display the list of robots known to the system</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>30.30.0 A way to refresh the robot list on demand by calling the procedure (20.0.0) to refresh the robot information in the database</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="requirements-revision-history"
+>2.1.9. Revision History</A
+></H2
+><DIV
+CLASS="informaltable"
+><A
+NAME="AEN117"
+></A
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+CELLPADDING="10"
+><THEAD
+><TR
+><TH
+WIDTH="10%"
+ALIGN="CENTER"
+VALIGN="MIDDLE"
+>&#13;		Document Revision #</TH
+><TH
+WIDTH="50%"
+ALIGN="CENTER"
+VALIGN="MIDDLE"
+>&#13;		Action Taken, Notes</TH
+><TH
+WIDTH="20%"
+ALIGN="CENTER"
+VALIGN="MIDDLE"
+>When?</TH
+><TH
+WIDTH="20%"
+ALIGN="CENTER"
+VALIGN="MIDDLE"
+>By Whom?</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+WIDTH="10%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>0.4</TD
+><TD
+WIDTH="50%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Added more detailed requirements, 
+              based on suggestions from Kai Wu</TD
+><TD
+WIDTH="20%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>2001-01-23</TD
+><TD
+WIDTH="20%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Roger Hsueh</TD
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>0.3</TD
+><TD
+WIDTH="50%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Revised document based on comments 
+              from Kevin Scaldeferri</TD
+><TD
+WIDTH="20%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>2000-12-13</TD
+><TD
+WIDTH="20%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Roger Hsueh</TD
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>0.2</TD
+><TD
+WIDTH="50%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Revised document based on comments 
+              from Michael Bryzek</TD
+><TD
+WIDTH="20%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>2000-12-07</TD
+><TD
+WIDTH="20%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Roger Hsueh</TD
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>0.1</TD
+><TD
+WIDTH="50%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Create initial version</TD
+><TD
+WIDTH="20%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>2000-12-06</TD
+><TD
+WIDTH="20%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Roger Hsueh</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+>&#13;      Last modified: $Date$
+    </P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+SIZE="1"
+NOSHADE="NOSHADE"
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="acs-admin-guide.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="design.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>ACS Administrator's guide</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Web Robot Detection Design Documentation</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

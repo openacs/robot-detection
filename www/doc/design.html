@@ -1,0 +1,976 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Web Robot Detection Design Documentation</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="aD Hack of: Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Robot detection"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Developer's guide"
+HREF="dev-guide.html"><LINK
+REL="PREVIOUS"
+TITLE="Developer's guide"
+HREF="dev-guide.html"><LINK
+REL="STYLESHEET"
+TYPE="text/css"
+HREF="ad-doc.css"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Robot detection</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="dev-guide.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 2. Developer's guide</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+>&nbsp;</TD
+></TR
+></TABLE
+><HR
+SIZE="1"
+NOSHADE="NOSHADE"
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="design"
+>2.2. Web Robot Detection Design Documentation</A
+></H1
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+>2.2.1. <A
+HREF="design.html#design-essentials"
+>Essentials</A
+></DT
+><DT
+>2.2.2. <A
+HREF="design.html#design-introduction"
+>Introduction</A
+></DT
+><DT
+>2.2.3. <A
+HREF="design.html#design-historical-considerations"
+>Historical Considerations</A
+></DT
+><DT
+>2.2.4. <A
+HREF="design.html#design-competitive-analysis"
+>Competitive Analysis</A
+></DT
+><DT
+>2.2.5. <A
+HREF="design.html#design-design-tradeoffs"
+>Design Tradeoffs</A
+></DT
+><DT
+>2.2.6. <A
+HREF="design.html#design-api"
+>API</A
+></DT
+><DT
+>2.2.7. <A
+HREF="design.html#design-data-model-discussion"
+>Data Model Discussion</A
+></DT
+><DT
+>2.2.8. <A
+HREF="design.html#design-user-interface"
+>User Interface</A
+></DT
+><DT
+>2.2.9. <A
+HREF="design.html#design-configurationparameters"
+>Configuration/Parameters</A
+></DT
+><DT
+>2.2.10. <A
+HREF="design.html#design-future-improvementsareas-of-likely-change"
+>Future Improvements/Areas of Likely Change</A
+></DT
+><DT
+>2.2.11. <A
+HREF="design.html#design-authors"
+>Authors</A
+></DT
+><DT
+>2.2.12. <A
+HREF="design.html#design-revision-history"
+>Revision History</A
+></DT
+></DL
+></DIV
+><DIV
+CLASS="authorblurb"
+><A
+NAME="AEN153"
+></A
+><P
+>&#13;      By <A
+HREF="mailto:rogerh@arsdigita.com"
+TARGET="_top"
+>Roger Hsueh</A
+>
+    </P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="design-essentials"
+>2.2.1. Essentials</A
+></H2
+><UL
+><LI
+><P
+CLASS="listitem"
+>&#13;	  ACS Administrator directory: 
+	  <A
+HREF="/robot-detection/admin"
+TARGET="_top"
+>/robot-detection/admin</A
+>
+	</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>Tcl API 
+	  <UL
+><LI
+><P
+CLASS="listitem"
+><A
+HREF="/api-doc/procs-file-view?path=%2fpackages%2frobot%2ddetection%2ftcl%2frobot%2ddetection%2dprocs%2etcl"
+TARGET="_top"
+>&#13;		  robot-detection-procs.tcl</A
+></P
+></LI
+><LI
+><P
+CLASS="listitem"
+><A
+HREF="/api-doc/procs-file-view?path=%2fpackages%2frobot%2ddetection%2ftcl%2frobot%2ddetection%2dinit%2etcl"
+TARGET="_top"
+>&#13;		  robot-detection-init.tcl</A
+></P
+></LI
+></UL
+>
+	</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>PL/SQL file 
+
+	  <UL
+><LI
+><P
+CLASS="listitem"
+><A
+HREF="/doc/sql/display-sql?url=robot-detection-create.sql&package_key=robot-detection"
+TARGET="_top"
+>&#13;		  robot-detection.create.sql</A
+></P
+></LI
+></UL
+>
+	</P
+></LI
+><LI
+><P
+CLASS="listitem"
+><A
+HREF="dev-guide.html#requirements"
+>Web Robot Detection Requirements</A
+></P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="design-introduction"
+>2.2.2. Introduction</A
+></H2
+><P
+>The goal of this package is to expose some parts of the site
+      that are normally not indexable by search engines. The package
+      accomplishes this by performing the following functions:</P
+><UL
+><LI
+><P
+CLASS="listitem"
+>Storing and maintaining information about known robots on the
+	  web (found at <A
+HREF="http://info.webcrawler.com/mak/projects/robots/active/all.txt"
+TARGET="_top"
+>Web
+	    Robots Database</A
+>) in a <TT
+CLASS="computeroutput"
+>robots</TT
+> table.</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>Using postauth ad_register_filters to identify robots
+	  connecting to areas covered by robot detection by matching the
+	  <TT
+CLASS="computeroutput"
+>UserAgent</TT
+> header with known robots.</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>Redirecting the robots to a special area on the site.</P
+></LI
+></UL
+><P
+>&#13;      This special area can either be a static page or a dynamic script
+      that generates texts from the database which are suitable for
+      search-engine indexing.
+    </P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="design-historical-considerations"
+>2.2.3. Historical Considerations</A
+></H2
+><P
+>Previous versions of the robot detection package relied on the
+      AOLServer procedure <TT
+CLASS="computeroutput"
+>ns_register_filter</TT
+>, which is
+      deprecated as of ACS4. The robot detection package now uses the
+      analogous <TT
+CLASS="computeroutput"
+>ad_register_filter</TT
+> provided by the request
+      processor in ACS 4.</P
+><P
+>&#13;      The queries are re-written to use the ACS 4 Database Access API.
+      Other than that, this version is a pretty straightforward port.
+    </P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="design-competitive-analysis"
+>2.2.4. Competitive Analysis</A
+></H2
+><P
+>On <A
+HREF="http://www.apache.org"
+TARGET="_top"
+>Apache</A
+>, it's possible to
+      accomplish more or less the same thing with <TT
+CLASS="computeroutput"
+><A
+HREF="http://httpd.apache.org/docs/mod/mod_rewrite.html"
+TARGET="_top"
+>mod_rewrite</A
+></TT
+>,
+      but that's a low-level module that requires a lot of coding to make
+      it work like the robot detection package.</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="design-design-tradeoffs"
+>2.2.5. Design Tradeoffs</A
+></H2
+><UL
+><LI
+><P
+CLASS="listitem"
+>Only suitable for ACS administrator use.
+	  What the web robots from search engines index depends on the
+	  content in the the directory specified with the RedirectURL
+	  parameter ("robot heaven"). Right now there's no automatic way to
+	  generate the static (or pseudo static) files in "robot heaven." The
+	  administrator should decide what sort of content to expose to
+	  search engines and generate the files accordingly.
+	</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>To keep things simple, admin page permission and parameter
+	  setting depends on the site-mapper. In particular, setting multiple
+	  values for the FilterPattern parameter can be kind of clumsy.
+	  Because ad_parameter only allows one value per key at this time, I
+	  chose to use to use CSV (comma separated values) string to
+	  represent a list of paths to be filtered. Fortunately, once
+	  robot-detection is setup, it doesn't require further
+	  administration.</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>Refreshing the robots table entails dropping all rows from
+	  robots table and then re-populating the data from scratch. This
+	  ensures synchronization with the data from the web robots
+	  database.</P
+></LI
+><LI
+><P
+CLASS="listitem"
+>The raw data comes from one static file that must be retrieved
+	  in its entirety using http. However, building and maintaining real
+	  rdbms backed registry of web robots is not worth the effort because
+	  the number of robots is unlikely to grow very much.</P
+></LI
+></UL
+><P
+></P
+><P
+></P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="design-api"
+>2.2.6. API</A
+></H2
+><P
+>The API for robot detection is quite simple: 
+      (You can also use the <A
+HREF="/api-doc"
+TARGET="_top"
+>API Browser</A
+> to view
+      this)
+    </P
+><DIV
+CLASS="variablelist"
+><DL
+><DT
+CLASS="listitem"
+><TT
+CLASS="varname"
+>ad_cache_robot_useragents</TT
+></DT
+><DD
+><P
+CLASS="listitem"
+>&#13;	    Caches "User-Agent" values for known robots
+	  </P
+></DD
+><DT
+CLASS="listitem"
+><TT
+CLASS="varname"
+>ad_replicate_web_robots_db</TT
+></DT
+><DD
+><P
+CLASS="listitem"
+>&#13;	    Replicates data from the <A
+HREF="http://info.webcrawler.com/mak/projects/robots/active.html"
+TARGET="_top"
+>Web
+	      Robots Database</A
+> into a table in the database. The data is
+	    published on the Web as a flat file, whose format is specified in
+	    <A
+HREF="http://info.webcrawler.com/mak/projects/robots/active/schema.txt"
+TARGET="_top"
+>http://info.webcrawler.com/mak/projects/robots/active/schema.txt</A
+>.
+	    Basically, each non-blank line of the database corresponds to one
+	    field (name-value pair) of a record that defines the
+	    characteristics of a registered robot. Each record has a "robot-id"
+	    field as a unique identifier. (There are many fields in the schema,
+	    but, for now, the only ones we care about are: robot-id,
+	    robot-name, robot-details-url, and robot-useragent.) Returns the
+	    number of rows replicated. May raise a Tcl error that should be
+	    caught by the caller.
+	  </P
+></DD
+><DT
+CLASS="listitem"
+><TT
+CLASS="varname"
+>ad_robot_filter</TT
+> <I
+CLASS="emphasis"
+>conn args why</I
+></DT
+><DD
+><P
+CLASS="listitem"
+>&#13;	    A filter to redirect any recognized robot to a specified page.
+	  </P
+><P
+CLASS="listitem"
+></P
+></DD
+><DT
+CLASS="listitem"
+><TT
+CLASS="varname"
+>ad_update_robot_list</TT
+></DT
+><DD
+><P
+CLASS="listitem"
+>&#13;	    Will update the robots table if it is empty or if the number of
+	    days since it was last updated is greater than the number of days
+	    specified by the RefreshIntervalDays configuration parameter.
+	  </P
+></DD
+><DT
+CLASS="listitem"
+><TT
+CLASS="varname"
+>robot_exists_p</TT
+> <I
+CLASS="emphasis"
+>robot_id</I
+></DT
+><DD
+><P
+CLASS="listitem"
+>&#13;	    Returns 1 if a row already exists in the robots table with the
+	    specified "robot_id", 0 otherwise.
+	  </P
+></DD
+><DT
+CLASS="listitem"
+><TT
+CLASS="varname"
+>robot_p</TT
+> <I
+CLASS="emphasis"
+>useragent</I
+></DT
+><DD
+><P
+CLASS="listitem"
+>&#13;	    Returns 1 if the useragent is recognized as a search engine, 0
+	    otherwise.
+	  </P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="design-data-model-discussion"
+>2.2.7. Data Model Discussion</A
+></H2
+><P
+>The data model has one table: <TT
+CLASS="computeroutput"
+>robots</TT
+>. It mirrors a
+      few critical fields of the schema laid out in 
+      <A
+HREF="http://info.webcrawler.com/mak/projects/robots/active/schema.txt"
+TARGET="_top"
+>Web
+	Robots Database Schema</A
+>. Only <TT
+CLASS="computeroutput"
+>robot_id</TT
+>,
+      <TT
+CLASS="computeroutput"
+>robot_name</TT
+>, <TT
+CLASS="computeroutput"
+>robot_details_url</TT
+>,
+      and <TT
+CLASS="computeroutput"
+>robot_useragent</TT
+> are used in the current
+      implementation.</P
+><UL
+><LI
+><P
+CLASS="listitem"
+><TT
+CLASS="computeroutput"
+>robot_id</TT
+> is not generated from a sequence in
+	  Oracle, rather it is the robot_id assigned by 
+	  <A
+HREF="http://info.webcrawler.com/mak/projects/robots/active.html"
+TARGET="_top"
+>Web
+	    Robot Database</A
+> for each individual robot.</P
+></LI
+><LI
+><P
+CLASS="listitem"
+><TT
+CLASS="computeroutput"
+>robot_name</TT
+> and 
+	  <TT
+CLASS="computeroutput"
+>robot_details_url</TT
+> are
+	  used to display a list of robots in the <A
+HREF="/robot-detection/admin"
+TARGET="_top"
+>/robot-detection/admin</A
+> 
+	  Robot Detection Administration page.
+	</P
+></LI
+><LI
+><P
+CLASS="listitem"
+><TT
+CLASS="computeroutput"
+>robot_useragent</TT
+> is the most important 
+	  field of the bunch. An incoming http request is identified as a robot if
+	  the <B
+CLASS="phrase"
+>UserAgent</B
+> header matches of one of the
+	  <TT
+CLASS="computeroutput"
+>robot_useragent</TT
+> in the robots table.</P
+></LI
+></UL
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="design-transactions"
+>2.2.7.1. Transactions</A
+></H3
+><P
+>&#13;	On server restarts, the robots table is refreshed with 
+	<A
+HREF="http://info.webcrawler.com/mak/projects/robots/active/all.txt"
+TARGET="_top"
+>the
+	  raw data from Web Robots Database</A
+> if the table's age is beyond
+	the number of days specified in the
+	<TT
+CLASS="computeroutput"
+>RefreshIntervalDays</TT
+> parameter. ACS Administrators can
+	also refresh the robots table manually with 
+	<A
+HREF="/robot-detection/admin"
+TARGET="_top"
+>Robot Detection Administration</A
+>. 	
+      </P
+></DIV
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="design-user-interface"
+>2.2.8. User Interface</A
+></H2
+><P
+>There is one page for ACS Administrators. It displays the
+      current parameters and a list of robots, plus a link to manually
+      refresh the robots table.</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="design-configurationparameters"
+>2.2.9. Configuration/Parameters</A
+></H2
+><DIV
+CLASS="informaltable"
+><A
+NAME="AEN295"
+></A
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+CELLPADDING="10"
+><THEAD
+><TR
+><TH
+ALIGN="CENTER"
+VALIGN="MIDDLE"
+>Name</TH
+><TH
+ALIGN="CENTER"
+VALIGN="MIDDLE"
+>Description</TH
+><TH
+ALIGN="CENTER"
+VALIGN="MIDDLE"
+>Default</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>WebRobotsDB</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>the URL of the Web Robots DB text file</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>&#13;	      http://info.webcrawler.com/mak/projects/robots/active/all.txt</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>FilterPattern</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>a CSV string containing the URLs for ad_robot_filter to
+	      checked</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>/members-only-stuff/*</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>RedirectURL</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>the URL where robots should be sent</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>/robot-heaven/</TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>RefreshIntervalDays</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>How frequently (in days) the robots table should be refreshed
+	      from the Web Robots DB</TD
+><TD
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>30</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+><P
+></P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="design-future-improvementsareas-of-likely-change"
+>2.2.10. Future Improvements/Areas of Likely Change</A
+></H2
+><P
+></P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="design-authors"
+>2.2.11. Authors</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+CLASS="listitem"
+>System creator: <A
+HREF="mailto:michael@arsdigita.com"
+TARGET="_top"
+>Michael
+	    Yoon</A
+></P
+></LI
+><LI
+><P
+CLASS="listitem"
+>System owner: <A
+HREF="mailto:rogerh@arsdigita.com"
+TARGET="_top"
+>Roger
+	    Hsueh</A
+></P
+></LI
+><LI
+><P
+CLASS="listitem"
+>Documentation author: <A
+HREF="mailto:rogerh@arsdigita.com"
+TARGET="_top"
+>Roger Hsueh</A
+></P
+></LI
+></UL
+><P
+></P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="design-revision-history"
+>2.2.12. Revision History</A
+></H2
+><P
+></P
+><DIV
+CLASS="informaltable"
+><A
+NAME="AEN340"
+></A
+><TABLE
+BORDER="1"
+CLASS="CALSTABLE"
+CELLPADDING="10"
+><THEAD
+><TR
+><TH
+WIDTH="10%"
+ALIGN="CENTER"
+VALIGN="MIDDLE"
+>&#13;		Document Revision #</TH
+><TH
+WIDTH="50%"
+ALIGN="CENTER"
+VALIGN="MIDDLE"
+>&#13;		Action Taken, Notes</TH
+><TH
+WIDTH="20%"
+ALIGN="CENTER"
+VALIGN="MIDDLE"
+>When?</TH
+><TH
+WIDTH="20%"
+ALIGN="CENTER"
+VALIGN="MIDDLE"
+>By Whom?</TH
+></TR
+></THEAD
+><TBODY
+><TR
+><TD
+WIDTH="10%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>0.3</TD
+><TD
+WIDTH="50%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Revised document based on comments 
+              from Kevin Scaldeferri</TD
+><TD
+WIDTH="20%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>2000-12-13</TD
+><TD
+WIDTH="20%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Roger Hsueh</TD
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>0.2</TD
+><TD
+WIDTH="50%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Revised document based on comments 
+              from Michael Bryzek</TD
+><TD
+WIDTH="20%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>2000-12-07</TD
+><TD
+WIDTH="20%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Roger Hsueh</TD
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>0.1</TD
+><TD
+WIDTH="50%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Create initial version</TD
+><TD
+WIDTH="20%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>2000-12-06</TD
+><TD
+WIDTH="20%"
+ALIGN="LEFT"
+VALIGN="MIDDLE"
+>Roger Hsueh</TD
+></TR
+></TBODY
+></TABLE
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+SIZE="1"
+NOSHADE="NOSHADE"
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="dev-guide.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>&nbsp;</TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Developer's guide</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="dev-guide.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>&nbsp;</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,44 @@
+<?xml version='1.0' ?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+[
+    <!ENTITY design SYSTEM "design.xml">
+    <!ENTITY requirements SYSTEM "requirements.xml">
+    <!ENTITY install SYSTEM "install.xml">
+]>
+
+<!-- Robot detection top-level doc -->
+
+<book>
+  <title>Robot detection</title>
+  <bookinfo>
+    <authorgroup>
+      <author>
+	<firstname>Michael</firstname>
+	<surname>Yoon</surname>
+	<affiliation>
+	  <address><email>michael@arsdigita.com</email></address>
+	</affiliation>
+      </author>
+      <author>
+	<firstname>Roger</firstname>
+	<surname>Hsueh</surname>
+	<affiliation>
+	  <address><email>rogerh@arsdigita.com</email></address>
+	</affiliation>
+      </author>
+    </authorgroup>
+  </bookinfo>
+    
+  <chapter id="acs-admin-guide">
+    <title>ACS Administrator's guide</title>
+    &install;
+  </chapter>
+
+  <chapter id="dev-guide">
+    <title>Developer's guide</title>
+    &requirements;
+    &design;
+  </chapter>
+  
+  
+</book>

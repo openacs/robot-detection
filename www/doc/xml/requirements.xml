@@ -1,0 +1,200 @@
+<sect1 id="requirements" xreflabel="Web Robot Detection Requirements">
+  <title>Web Robot Detection Requirements</title>
+  <authorblurb>
+    <para>
+      By <ulink url="mailto:rogerh@arsdigita.com">Roger Hsueh</ulink>
+    </para>
+  </authorblurb>
+
+  <sect2 id="requirements-introduction" xreflabel="Introduction">
+    <title>Introduction</title>
+    
+    <para>Search engines use web robots to periodically retrieve pages
+      from sites for indexing. However, robots won't be able to access
+      areas that requre users to log in, yet those areas probably have
+      content in the database that should be open to searches from the
+      public. The site administrator can set up a dedicated area on the
+      site to serve content to robots, now it's up to robot-detection to
+      make robots go to the right place.</para>
+  </sect2>
+  
+  <sect2 id="requirements-vision-statement" xreflabel="Vision Statement">
+    <title>Vision Statement</title>
+
+    <para>Without search engines, people would be lost on the Internet.
+      However, personalized systems like ACS have much of their content
+      hidden behind login pages -- which would be inaccessible for the
+      software robot crawlers from search engines. To increase a site's
+      visibility, site owners need a tool to identify visiting robots and
+      present them with content to be indexed.  The Web Robot Detection
+      package fulfills the role of such a tool.</para>
+  </sect2>
+
+  <sect2 id="requirements-web-robot-detection-overview" xreflabel="Web Robot Detection Overview">
+    <title>Web Robot Detection Overview</title>
+
+    <para>Web Robot Detection is an application package that defines a
+      data model and some code to handle traffic from search-engine
+      robots. It has the following components:</para>
+
+    <itemizedlist>
+      <listitem><para>A data model for storing information about known search-engine
+	  robots on the web.</para></listitem>
+
+      <listitem><para>A mechanism to maintain the list of robots and keep that in
+	  sync with the database.</para></listitem>
+
+      <listitem><para>A mechanism based on the ACS Kernel to specify the paths from
+	  which to redirect robots and the target to direct the robots
+	  to.</para></listitem>
+
+      <listitem><para>Code definition to make use of the request processor filter
+	  provided by ACS Kernel 4.0.</para></listitem>
+    </itemizedlist>
+  </sect2>
+
+  <sect2 id="requirements-use-cases-and-user-scenarios" xreflabel="Use-cases and User-scenarios">
+    <title>Use-cases and User-scenarios</title>
+
+    <para>The Web Robot Detection package is not meant to be used by
+      regular users. Instead, the site-wide administrator is responsible
+      for mapping directories not accessible to search engines to a
+      "robot heaven", which has been setup to provide content suitable to be
+      indexed.</para>
+    <para>The site-wide administrator would typically download the 
+      robot-detection package, install it using the APM (Arsdigita Package 
+      Manager) and set up the parameters, check out the administration page 
+      to see the current parameters and the list of identifiable robots, 
+      build the "robot heaven" and verify the whole thing works.  
+      Afterward, this package requires no additional maintenance. </para>
+
+    <para>A software robot making a http request to a part of the site that
+      requires login would be automatically redirected to the "robot heaven".
+    </para>
+  </sect2>
+
+  <sect2 id="requirements-related-links" xreflabel="Related Links">
+    <title>Related Links</title>
+
+    <itemizedlist>
+      <listitem><para><xref linkend="install"></xref></para></listitem>
+
+      <listitem><para><xref linkend="design"></xref></para></listitem>
+
+      <listitem><para><ulink url="http://www.arsdigita.com/qas/">Test Cases</ulink></para></listitem>
+    </itemizedlist>
+  </sect2>
+
+  <sect2 id="requirements-requirements-data-model" xreflabel="Requirements: Data Model">
+    <title>Requirements: Data Model</title>
+
+    <itemizedlist>
+      <listitem><para>10.10.0 Store information about robots</para></listitem>
+
+      <listitem><para>10.10.5 A primary key to identify each individual 
+          robot</para></listitem>
+
+      <listitem><para>10.10.7 Some fields for the UI: name of robot and
+          url to get more information about the robot</para></listitem>
+
+      <listitem><para>10.10.10 Useragent header is necessary to find out which
+	  connection is coming from a robot</para></listitem>
+
+      <listitem><para>10.10.15 Insertion date to keep track when was the robots table last refreshed</para></listitem>
+
+    </itemizedlist>
+
+
+  </sect2>
+
+  <sect2 id="requirements-requirements-api" xreflabel="Requirements: API">
+    <title>Requirements: API</title>
+
+    <itemizedlist>
+      <listitem><para>20.10.10 Check on server restart when was the robot information last refreshed, if it's been longer than a value specified in the package's parameter, run the procedure (20.20.0) to refresh the robot information in the database</para></listitem>
+      <listitem><para>20.10.15 On server restart, if the robot information is not present in the database, run the refresh procedure (20.20.0) to obtain it</para></listitem>
+
+      <listitem><para>20.20.0 A way to automatically gather information about web robots from a website that keeps such data</para></listitem>
+
+      <listitem><para>20.30.0 A way to detect robots based on the useragent field of the robot's http header</para></listitem>
+
+      <listitem><para>20.40.0 A way to redirect an identified robot to another path on the same site</para></listitem>
+    </itemizedlist>
+  </sect2>
+
+  <sect2 id="requirements-requirements-site-administrator-interface" xreflabel="Requirements: Site Administrator Interface">
+    <title>Requirements: Site Administrator Interface</title>
+
+    <itemizedlist>
+      <listitem><para>30.10.0 Display current parameters</para></listitem>
+
+      <listitem><para>30.20.0 Display the list of robots known to the system</para></listitem>
+
+      <listitem><para>30.30.0 A way to refresh the robot list on demand by calling the procedure (20.0.0) to refresh the robot information in the database</para></listitem>
+    </itemizedlist>
+  </sect2>
+
+  <sect2 id="requirements-revision-history" xreflabel="Revision History">
+    <title>Revision History</title>
+
+    <informaltable><tgroup cols="4">
+	<colspec colwidth="1*"></colspec>
+	<colspec colwidth="5*"></colspec>
+	<colspec colwidth="2*"></colspec>
+	<colspec colwidth="2*"></colspec>
+	<thead>
+	  <row>
+	    <entry align="center">
+		Document Revision #</entry>
+	    <entry align="center">
+		Action Taken, Notes</entry>
+	    <entry align="center">When?</entry>
+	    <entry align="center">By Whom?</entry>
+	  </row>
+	</thead>
+
+	<tbody>
+	  <row>
+	    <entry>0.4</entry>
+	    <entry>Added more detailed requirements, 
+              based on suggestions from Kai Wu</entry>
+	    <entry>2001-01-23</entry>
+	    <entry>Roger Hsueh</entry>
+	  </row>
+	  <row>
+	    <entry>0.3</entry>
+	    <entry>Revised document based on comments 
+              from Kevin Scaldeferri</entry>
+	    <entry>2000-12-13</entry>
+	    <entry>Roger Hsueh</entry>
+	  </row>
+
+	  <row>
+	    <entry>0.2</entry>
+	    <entry>Revised document based on comments 
+              from Michael Bryzek</entry>
+	    <entry>2000-12-07</entry>
+	    <entry>Roger Hsueh</entry>
+	  </row>
+
+	  <row>
+	    <entry>0.1</entry>
+	    <entry>Create initial version</entry>
+	    <entry>2000-12-06</entry>
+	    <entry>Roger Hsueh</entry>
+	  </row>
+
+	</tbody></tgroup></informaltable>
+
+    <para>
+      Last modified: $Date$
+    </para>
+
+  </sect2>
+</sect1>
+
+<!--
+ Local Variables:
+ sgml-parent-document: ("index.xml" "chapter" "sect1")
+ End:
+-->

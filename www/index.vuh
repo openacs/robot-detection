@@ -1,0 +1,8 @@
+ad_page_contract {
+    There's no user page for robot-detection 
+    thus we redirect to its admin page
+    @author Roger Hsueh (rogerh@arsdigita.com)
+    @creation-date 2000-12-13
+    @cvs-id $Id$
+}
+ad_returnredirect admin/index
