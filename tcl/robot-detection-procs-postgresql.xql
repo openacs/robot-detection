@@ -4,7 +4,7 @@
 
 <fullquery name="ad_update_robot_list.days_since_last_update">      
       <querytext>
-		select trunc(current_timestamp - max(coalesce(modified_date, insertion_date))) from robots
+              select date_part('days',current_timestamp - max(coalesce(modified_date,insertion_date))) from robots
       </querytext>
 </fullquery>
  
