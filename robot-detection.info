@@ -49,7 +49,7 @@
         <parameters>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="RefreshIntervalDays"  default="30" description="How frequently (in days) the robots table should be refreshed from the Web Robots DB"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="FilterPattern"  default="/member-only/*" description="a CSV string containing the URL paths to be filtered"/>
-            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="WebRobotsDB"  default="http://info.webcrawler.com/mak/projects/robots/active/all.txt" description="the URL of the Web Robots DB text file"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="WebRobotsDB"  default="http://www.robotstxt.org/wc/active/all.txt" description="the URL of the Web Robots DB text file"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="RedirectURL"  default="/robot-heaven/" description="the URL where robots should be sent"/>
         </parameters>
 

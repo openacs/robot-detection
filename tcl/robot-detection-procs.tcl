@@ -4,7 +4,7 @@ ad_library {
     @author Michael Yoon (michael@yoon.org) 
     @author Roger Hsueh (rogerh@arsdigita.com) 
     @creation-date 1999-05-27
-    @cvs-id $Id$
+    @cvs-id robot-detection-procs.tcl,v 1.2 2002/03/09 02:00:02 donb Exp
 }
 ad_proc ad_replicate_web_robots_db {} {
 Replicates data from the Web Robots Database 
@@ -39,12 +39,17 @@ of rows replicated. May raise a Tcl error that should be caught by the caller.
 	db_dml delete_old_robots_table {
 	    delete from robots
 	}
-        set robot_id [db_null]
-        set robot_name [db_null]
-        set robot_details_url [db_null]
-        set robot_useragent [db_null]
+        set robot_id ""
+        set robot_name ""
+        set robot_details_url ""
+        set robot_useragent ""
 	foreach line $page {
 	    if {![regexp {\w+} $line]} {
+
+                if { [string equal $robot_name ""] } {
+                    set robot_name $robot_id
+                }
+
                 #detected a blank line, that means we are should try to 
                 #insert a row into the robots table, if robot_id and robot_useragent are not null
                 if {[exists_and_not_null robot_id] && [exists_and_not_null robot_useragent]} {
@@ -55,16 +60,17 @@ of rows replicated. May raise a Tcl error that should be caught by the caller.
                     }
                 }
                 # start clean for a new record
-                set robot_id [db_null]
-                set robot_name [db_null]
-                set robot_details_url [db_null]
-                set robot_useragent [db_null]
+                set robot_id ""
+                set robot_name ""
+                set robot_details_url ""
+                set robot_useragent ""
                 continue
             }
-	    if {[regexp {robot-id: *(.+)} $line match robot_id] ||
-            [regexp {robot-name: *(.+)} $line match robot_name] ||
-            [regexp {robot-details-url: *(.+)} $line match robot_details_url] ||
-            [regexp {robot-useragent: *(.+)} $line match robot_useragent] } {
+
+	    if {[regexp {robot-id:\s*([^\s]+)\s*} $line match robot_id] ||
+            [regexp {robot-name:\s*([^\s]+)\s*} $line match robot_name] ||
+            [regexp {robot-details-url:\s*([^\s]+)\s*} $line match robot_details_url] ||
+            [regexp {robot-useragent:\s*([\s]+)\s*} $line match robot_useragent] } {
                 continue
             }
 	}
